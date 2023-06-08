@@ -1,15 +1,15 @@
-class EmployeeModel {
-  final String name;
-  final EmployeeRole role;
-  final DateTime startDate;
-  final DateTime? endDate;
+import 'package:isar/isar.dart';
 
-  const EmployeeModel({
-    required this.name,
-    required this.role,
-    required this.startDate,
-    this.endDate,
-  });
+part 'employee_model.g.dart';
+
+@collection
+class EmployeeModel {
+  Id? id;
+  String? name;
+  @Enumerated(EnumType.value, 'title')
+  EmployeeRole? role;
+  DateTime? startDate;
+  DateTime? endDate;
 }
 
 enum EmployeeRole {

@@ -17,7 +17,7 @@ class _EmployeeListScreenState extends State<EmployeeListScreen> {
   late final EmployeeListBloc _employeeListBloc;
   @override
   void initState() {
-    _employeeListBloc = EmployeeListBloc(employeeContract: EmployeeRepo());
+    _employeeListBloc = EmployeeListBloc(employeeRepo: EmployeeRepo());
     super.initState();
   }
 
