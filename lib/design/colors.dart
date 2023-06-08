@@ -25,6 +25,7 @@ class AppColors {
   final Color buttonTextSecondary;
   final Color iconPrimary;
   final Color iconSecondary;
+  final Color appBarBackground;
 
   AppColors({
     this.primary = blueLight,
@@ -40,5 +41,6 @@ class AppColors {
     this.buttonTextSecondary = blueLight,
     this.iconPrimary = blueLight,
     this.iconSecondary = white,
+    this.appBarBackground = blueLight,
   });
 }

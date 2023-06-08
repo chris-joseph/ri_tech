@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ri_tech/app/employee/employee_list/employee_list_screen.dart';
 import 'package:ri_tech/routes/routes.dart';
 
 void main() {
@@ -18,25 +19,6 @@ class MyApp extends StatelessWidget {
       ),
       home: const EmployeeListScreen(),
       routes: getRoutes,
-    );
-  }
-}
-
-class EmployeeListScreen extends StatefulWidget {
-  const EmployeeListScreen({Key? key}) : super(key: key);
-
-  @override
-  State<EmployeeListScreen> createState() => _EmployeeListScreenState();
-}
-
-class _EmployeeListScreenState extends State<EmployeeListScreen> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("EmployeeList"),
-        centerTitle: false,
-      ),
     );
   }
 }

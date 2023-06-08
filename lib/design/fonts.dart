@@ -1,4 +1,4 @@
-import 'dart:ui';
+import 'package:flutter/material.dart';
 
 const fontFamily = "Roboto";
 
@@ -13,20 +13,24 @@ class AppFonts {
     textStyle = medium;
   }
 
+  TextStyle? getTextStyle(TStyle style) {
+    return textStyle[TStyle] ?? const TextStyle();
+  }
+
   Map<TStyle, TextStyle> medium = {
-    TStyle.h1: TextStyle(
+    TStyle.h1: const TextStyle(
       fontFamily: fontFamily,
       fontSize: 18,
     ),
-    TStyle.h2: TextStyle(
+    TStyle.h2: const TextStyle(
       fontFamily: fontFamily,
       fontSize: 16,
     ),
-    TStyle.b1: TextStyle(
+    TStyle.b1: const TextStyle(
       fontFamily: fontFamily,
       fontSize: 14,
     ),
-    TStyle.b2: TextStyle(
+    TStyle.b2: const TextStyle(
       fontFamily: fontFamily,
       fontSize: 12,
     ),
