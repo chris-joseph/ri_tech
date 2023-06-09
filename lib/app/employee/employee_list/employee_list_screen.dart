@@ -5,6 +5,7 @@ import 'package:ri_tech/app/employee/employee_list/bloc/employee_list_bloc.dart'
 import 'package:ri_tech/app/employee/employee_list/widgets/employee_list_no_records_widget.dart';
 import 'package:ri_tech/data/repository/employee/employee_repository.dart';
 import 'package:ri_tech/design/colors.dart';
+import 'package:ri_tech/routes/routes.dart';
 
 class EmployeeListScreen extends StatefulWidget {
   const EmployeeListScreen({Key? key}) : super(key: key);
@@ -33,12 +34,14 @@ class _EmployeeListScreenState extends State<EmployeeListScreen> {
             elevation: 0,
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            onPressed: () {},
-            backgroundColor: AppColors().buttonPrimary,
+            onPressed: () {
+              Navigator.pushNamed(context, addEmployee);
+            },
+            backgroundColor: AppColors.colors.buttonPrimary,
             child: Icon(
               Icons.add,
               size: 18,
-              color: AppColors().iconSecondary,
+              color: AppColors.colors.iconSecondary,
             ),
           ),
         ),

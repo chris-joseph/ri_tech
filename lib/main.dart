@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:ri_tech/app/employee/employee_list/employee_list_screen.dart';
+import 'package:ri_tech/data/dao/employee/employee_dao.dart';
 import 'package:ri_tech/routes/routes.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await employeeDAO.init();
   runApp(const MyApp());
 }
 

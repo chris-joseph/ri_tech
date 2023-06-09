@@ -20,7 +20,12 @@ class EmployeeListBloc extends Bloc<EmployeeListEvent, EmployeeListState> {
   }
 
   Future<void> _init(EmployeeListInitEvent event, emit) async {
-    final List<EmployeeModel?> employees = await _employeeRepo.getEmployees([]);
+    final List<EmployeeModel?>? employees =
+        await _employeeRepo.getEmployees([]);
+    if (employees == null || employees.isEmpty) {
+      emit(EmployeeListEmptyState());
+      return;
+    }
     for (EmployeeModel? employee in employees) {
       if (employee != null) {
         if (employee.isCurrent) {

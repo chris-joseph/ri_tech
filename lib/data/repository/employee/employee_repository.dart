@@ -15,7 +15,7 @@ class EmployeeRepo implements EmployeeContract {
   }
 
   @override
-  Future<List<EmployeeModel?>> getEmployees(ids) async {
+  Future<List<EmployeeModel>> getEmployees(ids) async {
     return await employeeDAO.getEmployeeByIds(ids);
   }
 

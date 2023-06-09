@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
+import 'design.dart';
+
 const fontFamily = "Roboto";
 
 enum TStyle { h1, h2, b1, b2 }
-
-enum DeviceDimension { small, medium, big }
 
 class AppFonts {
   late final Map<TStyle, TextStyle> textStyle;

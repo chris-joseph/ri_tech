@@ -11,9 +11,9 @@ class EmployeeAppbar extends StatelessWidget {
   }
 }
 
-PreferredSizeWidget getEmployeeAppBar(String title, actions) {
+PreferredSizeWidget getEmployeeAppBar(String title, List<Widget>? actions) {
   return AppBar(
-    titleSpacing: AppPadding.m,
+    titleSpacing: AppPadding.padding.m,
     centerTitle: false,
     leadingWidth: 0,
     systemOverlayStyle: const SystemUiOverlayStyle(
@@ -22,13 +22,15 @@ PreferredSizeWidget getEmployeeAppBar(String title, actions) {
       systemNavigationBarDividerColor: blueDark,
       systemStatusBarContrastEnforced: true,
     ),
-    backgroundColor: AppColors().appBarBackground,
+    backgroundColor: AppColors.colors.appBarBackground,
+    actions: actions ?? <Widget>[],
+    automaticallyImplyLeading: false,
     title: Padding(
-      padding: const EdgeInsets.symmetric(vertical: AppPadding.l),
+      padding: EdgeInsets.symmetric(vertical: AppPadding.padding.l),
       child: Text(
         title,
         style: AppFonts().getTextStyle(TStyle.h1)?.copyWith(
-              color: AppColors().buttonTextPrimary,
+              color: AppColors.colors.buttonTextPrimary,
               fontWeight: FontWeight.w500,
               letterSpacing: 0.1,
             ),
