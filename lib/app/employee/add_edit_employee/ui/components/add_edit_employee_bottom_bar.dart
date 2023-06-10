@@ -4,8 +4,10 @@ import 'package:ri_tech/design/colors.dart';
 import 'package:ri_tech/design/padding.dart';
 
 class AddEditEmployeeBottomBar extends StatelessWidget {
+  final VoidCallback onSave;
   const AddEditEmployeeBottomBar({
     super.key,
+    required this.onSave,
   });
 
   @override
@@ -37,7 +39,7 @@ class AddEditEmployeeBottomBar extends StatelessWidget {
           AppButtonSmall.primary(
             buttonText: "Save",
             onPressed: () {
-              Navigator.pop(context);
+              onSave();
             },
           ),
         ],

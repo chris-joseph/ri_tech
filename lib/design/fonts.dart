@@ -36,3 +36,5 @@ class AppFonts {
     ),
   };
 }
+
+AppFonts appFonts = AppFonts();

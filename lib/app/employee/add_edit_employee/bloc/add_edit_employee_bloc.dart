@@ -9,7 +9,7 @@ part 'add_edit_employee_state.dart';
 class AddEditEmployeeBloc
     extends Bloc<AddEditEmployeeEvent, AddEditEmployeeState> {
   final EmployeeRepo _employeeRepo;
-  late int? _employeeId;
+  int? _employeeId;
   late String _employeeName;
   EmployeeRole? _employeeRole;
   late DateTime _startDate;
@@ -72,20 +72,37 @@ class AddEditEmployeeBloc
     emit(dataState);
   }
 
+  (bool, String) _validateRequest() {
+    if (isEditing && _employeeId == null) {
+      return (false, "Employee id wrong");
+    }
+    if (_employeeName.length < 3) {
+      return (false, "Employee name length less than 3");
+    }
+    if (_employeeRole == null) {
+      return (false, "Employee role is empty");
+    }
+    return (true, "Valid");
+  }
+
   Future<void> _save(AddEditEmployeeSaveEvent event, emit) async {
-    //TODO(chris): Validate
     //name len>=3
-    //startDate !=null
     //role !=null
     //if isEdit =>id !=null
-    final employee = await _employeeRepo.createEmployee(
-      EmployeeModel(
-        name: _employeeName,
-        role: _employeeRole,
-        id: _employeeId,
-        endDate: _endDate,
-        startDate: _startDate,
-      ),
-    );
+    final valid = _validateRequest();
+    print(valid);
+    if (valid.$1) {
+      final employee = await _employeeRepo.createEmployee(
+        EmployeeModel(
+          name: _employeeName,
+          role: _employeeRole,
+          id: _employeeId,
+          endDate: _endDate,
+          startDate: _startDate,
+        ),
+      );
+    } else {
+      //TODO show error toasts
+    }
   }
 }

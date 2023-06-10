@@ -26,5 +26,6 @@ class AddEditEmployeeDataState extends AddEditEmployeeState {
   List<Object> get props => [
         employeeName,
         startDate.millisecondsSinceEpoch,
+        DateTime.now().toIso8601String()
       ];
 }

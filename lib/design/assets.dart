@@ -9,5 +9,6 @@ class Assets {
   static const calendar = "assets/icons/calendar.svg";
   static const plus = "assets/icons/plus.svg";
   static const arrowRight = "assets/icons/arrow-right.svg";
+  static const arrow = "assets/icons/arrow.svg";
   static const dropDown = "assets/icons/drop-down.svg";
 }

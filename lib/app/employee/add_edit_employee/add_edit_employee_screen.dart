@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:ri_tech/app/employee/add_edit_employee/bloc/add_edit_employee_bloc.dart';
 import 'package:ri_tech/app/employee/add_edit_employee/ui/components/add_edit_employee_bottom_bar.dart';
+import 'package:ri_tech/app/employee/common/widgets/date_picker.dart';
 import 'package:ri_tech/app/employee/common/widgets/employee_appbar.dart';
 import 'package:ri_tech/data/models/employee/employee_model.dart';
 import 'package:ri_tech/data/repository/employee/employee_repository.dart';
@@ -43,9 +44,7 @@ class _AddEditEmployeeScreenState extends State<AddEditEmployeeScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        //resizeToAvoidBottomInset: false,
         appBar: getEmployeeAppBar("Add Employee Details", []),
-        //bottomNavigationBar: const AddEditEmployeeBottomBar(),
         body: BlocBuilder<AddEditEmployeeBloc, AddEditEmployeeState>(
             bloc: _addEditEmployeeBloc,
             builder: (context, state) {
@@ -56,10 +55,27 @@ class _AddEditEmployeeScreenState extends State<AddEditEmployeeScreen> {
                       employeeNameController: _employeeNameController,
                       inputBorder: _inputBorder,
                     ),
-                    AddEditEmployeeRoleField(selectedRole: state.employeeRole),
-                    AddEditEmployeeDateSection(),
+                    AddEditEmployeeRoleField(
+                      selectedRole: state.employeeRole,
+                      onSelectionChange: (role) {
+                        _addEditEmployeeBloc
+                            .add(AddEditEmployeeRoleUpdateEvent(role));
+                      },
+                    ),
+                    AddEditEmployeeDateSection(
+                      startDate: state.startDate,
+                      endDate: state.endDate,
+                      onStartDateChange: (date) => _addEditEmployeeBloc
+                          .add(AddEditEmployeeStartDateChangeEvent(date)),
+                      onEndDateChange: (date) => _addEditEmployeeBloc
+                          .add(AddEditEmployeeEndDateChangeEvent(date)),
+                    ),
                     const Spacer(),
-                    const AddEditEmployeeBottomBar()
+                    AddEditEmployeeBottomBar(
+                      onSave: () => _addEditEmployeeBloc.add(
+                        AddEditEmployeeSaveEvent(),
+                      ),
+                    ),
                   ],
                 );
               }
@@ -76,8 +92,16 @@ class _AddEditEmployeeScreenState extends State<AddEditEmployeeScreen> {
 }
 
 class AddEditEmployeeDateSection extends StatelessWidget {
+  final Function(DateTime) onStartDateChange;
+  final Function(DateTime?) onEndDateChange;
+  final DateTime startDate;
+  final DateTime? endDate;
   const AddEditEmployeeDateSection({
     super.key,
+    required this.onStartDateChange,
+    required this.onEndDateChange,
+    required this.startDate,
+    required this.endDate,
   });
 
   @override
@@ -89,14 +113,34 @@ class AddEditEmployeeDateSection extends StatelessWidget {
       ),
       child: Row(
         children: [
-          AddEditEmployeeDateSectionWidget(),
+          AddEditEmployeeDateSectionWidget(
+            selectedDate: startDate,
+            onChange: (dateTime) {
+              onStartDateChange(dateTime!);
+            },
+            quickSelectOptions: const [
+              DatePickerQuickSelectOptions.today,
+              DatePickerQuickSelectOptions.nextMonday,
+              DatePickerQuickSelectOptions.nextTuesday,
+              DatePickerQuickSelectOptions.nextWeek
+            ],
+          ),
           Padding(
             padding: EdgeInsets.symmetric(
               horizontal: AppPadding.padding.l,
             ),
             child: SvgPicture.asset(Assets.arrowRight),
           ),
-          AddEditEmployeeDateSectionWidget(),
+          AddEditEmployeeDateSectionWidget(
+            selectedDate: endDate,
+            onChange: (dateTime) {
+              onEndDateChange(dateTime);
+            },
+            quickSelectOptions: const [
+              DatePickerQuickSelectOptions.today,
+              DatePickerQuickSelectOptions.noDate
+            ],
+          ),
         ],
       ),
     );
@@ -104,8 +148,14 @@ class AddEditEmployeeDateSection extends StatelessWidget {
 }
 
 class AddEditEmployeeDateSectionWidget extends StatelessWidget {
+  final List<DatePickerQuickSelectOptions> quickSelectOptions;
+  final DateTime? selectedDate;
+  final Function(DateTime?) onChange;
   const AddEditEmployeeDateSectionWidget({
     super.key,
+    required this.quickSelectOptions,
+    this.selectedDate,
+    required this.onChange,
   });
 
   @override
@@ -113,13 +163,26 @@ class AddEditEmployeeDateSectionWidget extends StatelessWidget {
     return Flexible(
       child: InkWell(
         onTap: () {
-          showDatePicker(
+          showDialog(
+            barrierColor: barrierGrey,
             context: context,
-            initialDate: DateTime.now(),
-            firstDate: DateTime.now(),
-            lastDate: DateTime.now().add(
-              const Duration(days: 365),
-            ),
+            builder: (context) {
+              return Dialog(
+                backgroundColor: white,
+                insetPadding: const EdgeInsets.all(16),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16)),
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: white, borderRadius: BorderRadius.circular(16)),
+                  child: DatePicker(
+                    selectedDate: selectedDate,
+                    quickSelectOptions: quickSelectOptions,
+                    onChange: onChange,
+                  ),
+                ),
+              );
+            },
           );
         },
         child: Container(
@@ -139,7 +202,10 @@ class AddEditEmployeeDateSectionWidget extends StatelessWidget {
               const SizedBox(
                 width: 8,
               ),
-              Text("today")
+              Text(
+                getDateString(selectedDate),
+                style: AppFonts().getTextStyle(TStyle.h1),
+              )
             ],
           ),
         ),
@@ -149,9 +215,11 @@ class AddEditEmployeeDateSectionWidget extends StatelessWidget {
 }
 
 class AddEditEmployeeRoleField extends StatelessWidget {
+  final Function(EmployeeRole) onSelectionChange;
   const AddEditEmployeeRoleField({
     super.key,
     required EmployeeRole? selectedRole,
+    required this.onSelectionChange,
   }) : _selectedRole = selectedRole;
 
   final EmployeeRole? _selectedRole;
@@ -176,21 +244,27 @@ class AddEditEmployeeRoleField extends StatelessWidget {
               ...List.generate(
                 EmployeeRole.values.length,
                 (index) {
-                  return Container(
-                    width: double.infinity,
-                    alignment: Alignment.center,
-                    padding: EdgeInsets.all(AppPadding.padding.m),
-                    decoration: const BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(
-                          color: outlineGrey,
-                          width: 1,
+                  return GestureDetector(
+                    onTap: () {
+                      onSelectionChange(EmployeeRole.values[index]);
+                      Navigator.pop(context);
+                    },
+                    child: Container(
+                      width: double.infinity,
+                      alignment: Alignment.center,
+                      padding: EdgeInsets.all(AppPadding.padding.m),
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                            color: outlineGrey,
+                            width: 1,
+                          ),
                         ),
                       ),
-                    ),
-                    child: Text(
-                      EmployeeRole.values[index].title,
-                      style: AppFonts().getTextStyle(TStyle.h2),
+                      child: Text(
+                        EmployeeRole.values[index].title,
+                        style: AppFonts().getTextStyle(TStyle.h2),
+                      ),
                     ),
                   );
                 },
