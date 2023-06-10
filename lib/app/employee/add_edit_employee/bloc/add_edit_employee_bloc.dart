@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:ri_tech/data/models/employee/employee_model.dart';
 import 'package:ri_tech/data/repository/employee/employee_repository.dart';
 
@@ -85,6 +86,13 @@ class AddEditEmployeeBloc
     }
     if (_employeeRole == null) {
       return (false, "Employee role is empty");
+    }
+    if (_endDate != null) {
+      if (Jiffy.parseFromDateTime(_endDate!).isSameOrBefore(
+          Jiffy.parseFromDateTime(_startDate),
+          unit: Unit.day)) {
+        return (false, "Start date is on or before end date");
+      }
     }
     return (true, "Valid");
   }
