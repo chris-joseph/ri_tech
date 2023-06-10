@@ -29,11 +29,11 @@ PreferredSizeWidget getEmployeeAppBar(String title, List<Widget>? actions) {
       padding: EdgeInsets.symmetric(vertical: AppPadding.padding.l),
       child: Text(
         title,
-        style: AppFonts().getTextStyle(TStyle.h1)?.copyWith(
-              color: AppColors.colors.buttonTextPrimary,
-              fontWeight: FontWeight.w500,
-              letterSpacing: 0.1,
-            ),
+        style: AppFonts.fonts.h1.copyWith(
+          color: AppColors.colors.buttonTextPrimary,
+          fontWeight: FontWeight.w500,
+          letterSpacing: 0.1,
+        ),
       ),
     ),
   );

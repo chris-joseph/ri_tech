@@ -26,10 +26,11 @@ class EmployeeDAO {
   }
 
   Future<bool> deleteEmployeeById(int id) async {
+    bool? res;
     await _isar.writeTxn(() async {
-      return await _isar.employeeDAOModels.delete(id);
+      res = await _isar.employeeDAOModels.delete(id);
     });
-    return false;
+    return res ?? false;
   }
 
   Future<EmployeeModel?> createOrUpdateEmployee(EmployeeModel employee) async {
@@ -48,10 +49,10 @@ class EmployeeDAO {
   }
 
   Future<List<EmployeeModel>> getEmployeeByIds(List<int>? ids) async {
-    final res = await _isar.employeeDAOModels.getAll(ids ?? []);
-    final temp = List.from(res.where((element) => element == null));
+    final res = await _isar.employeeDAOModels.where().findAll();
+
     List<EmployeeModel> list =
-        List.generate(temp.length, (index) => temp[index].toEmployeeModel());
+        List.generate(res.length, (index) => res[index].toEmployeeModel());
     return list;
   }
 }

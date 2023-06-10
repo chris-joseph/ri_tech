@@ -28,8 +28,8 @@ class _AddEditEmployeeScreenState extends State<AddEditEmployeeScreen> {
   void initState() {
     super.initState();
     _isEditing = widget.employeeId != null;
-    _addEditEmployeeBloc = AddEditEmployeeBloc(
-        employeeRepo: EmployeeRepo(), isEditing: _isEditing);
+    _addEditEmployeeBloc =
+        AddEditEmployeeBloc(employeeRepo: employeeRepo, isEditing: _isEditing);
     _employeeNameController = TextEditingController();
     _employeeNameController.addListener(
       () {
@@ -44,11 +44,58 @@ class _AddEditEmployeeScreenState extends State<AddEditEmployeeScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: getEmployeeAppBar("Add Employee Details", []),
-        body: BlocBuilder<AddEditEmployeeBloc, AddEditEmployeeState>(
+        appBar: getEmployeeAppBar(
+            "Add Employee Details",
+            _isEditing
+                ? [
+                    GestureDetector(
+                      onTap: () {
+                        _addEditEmployeeBloc.add(
+                            AddEditEmployeeDeleteEvent(widget.employeeId!));
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 16),
+                        child: SvgPicture.asset(Assets.delete),
+                      ),
+                    )
+                  ]
+                : []),
+        body: BlocConsumer<AddEditEmployeeBloc, AddEditEmployeeState>(
             bloc: _addEditEmployeeBloc,
+            listener: (context, state) {
+              if (state is AddEditEmployeeActionState) {
+                switch (state.action) {
+                  case AddEditEmployeeListAction.validation:
+                    final snackBar = SnackBar(
+                      content: Text(state.data ?? ""),
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    break;
+                  case AddEditEmployeeListAction.pop:
+                    Navigator.pop(context);
+                    break;
+                  case AddEditEmployeeListAction.showDeleteSnackBar:
+                    final snackBar = SnackBar(
+                      content: const Text('Employee data has been deleted'),
+                      action: SnackBarAction(
+                        label: 'UNDO',
+                        onPressed: () {
+                          _addEditEmployeeBloc
+                              .add(const AddEditEmployeeUndoEvent());
+                        },
+                      ),
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    Navigator.pop(context);
+                    break;
+                  default:
+                }
+              }
+            },
+            buildWhen: (p, c) => c is! AddEditEmployeeActionState,
             builder: (context, state) {
               if (state is AddEditEmployeeDataState) {
+                _employeeNameController.text = state.employeeName;
                 return Column(
                   children: [
                     AddEditEmployeeTextField(
@@ -204,7 +251,7 @@ class AddEditEmployeeDateSectionWidget extends StatelessWidget {
               ),
               Text(
                 getDateString(selectedDate),
-                style: AppFonts().getTextStyle(TStyle.h1),
+                style: AppFonts.fonts.h1,
               )
             ],
           ),
@@ -229,7 +276,7 @@ class AddEditEmployeeRoleField extends StatelessWidget {
     return GestureDetector(
       onTap: () => showModalBottomSheet(
         context: context,
-        //useSafeArea: true,
+        useSafeArea: true,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
             topRight: Radius.circular(16),
@@ -263,7 +310,7 @@ class AddEditEmployeeRoleField extends StatelessWidget {
                       ),
                       child: Text(
                         EmployeeRole.values[index].title,
-                        style: AppFonts().getTextStyle(TStyle.h2),
+                        style: AppFonts.fonts.h2,
                       ),
                     ),
                   );
@@ -292,10 +339,8 @@ class AddEditEmployeeRoleField extends StatelessWidget {
               child: Text(
                 _selectedRole?.title ?? "Select Role",
                 style: _selectedRole == null
-                    ? AppFonts()
-                        .getTextStyle(TStyle.h2)
-                        ?.copyWith(color: disabledGrey)
-                    : AppFonts().getTextStyle(TStyle.h2),
+                    ? AppFonts.fonts.h2.copyWith(color: disabledGrey)
+                    : AppFonts.fonts.h2,
               ),
             ),
             SvgPicture.asset(Assets.dropDown),
@@ -324,8 +369,9 @@ class AddEditEmployeeTextField extends StatelessWidget {
         horizontal: AppPadding.padding.m,
       ),
       child: TextField(
+        onTapOutside: (e) => FocusManager.instance.primaryFocus?.unfocus(),
         controller: _employeeNameController,
-        style: AppFonts().getTextStyle(TStyle.h2),
+        style: AppFonts.fonts.h2,
         cursorColor: blueDark,
         decoration: InputDecoration(
           enabledBorder: inputBorder,
@@ -334,9 +380,7 @@ class AddEditEmployeeTextField extends StatelessWidget {
           constraints: const BoxConstraints.tightFor(height: 40),
           contentPadding: EdgeInsets.all(AppPadding.padding.xs),
           hintText: "Employee Name",
-          hintStyle: AppFonts()
-              .getTextStyle(TStyle.h2)
-              ?.copyWith(color: disabledGrey, fontSize: 14),
+          hintStyle: AppFonts.fonts.b1.copyWith(color: disabledGrey),
           prefixIcon: Container(
             width: 44,
             alignment: Alignment.centerLeft,

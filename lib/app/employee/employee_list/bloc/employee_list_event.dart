@@ -8,6 +8,8 @@ abstract class EmployeeListEvent extends Equatable {
 
 class EmployeeListInitEvent extends EmployeeListEvent {}
 
+class EmployeeListUndoDeleteEvent extends EmployeeListEvent {}
+
 class EmployeeDeleteEvent extends EmployeeListEvent {
   final int id;
 

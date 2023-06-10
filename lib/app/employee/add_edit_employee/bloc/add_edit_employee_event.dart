@@ -37,3 +37,13 @@ class AddEditEmployeeEndDateChangeEvent extends AddEditEmployeeEvent {
 
   const AddEditEmployeeEndDateChangeEvent(this.endDate);
 }
+
+class AddEditEmployeeDeleteEvent extends AddEditEmployeeEvent {
+  final int id;
+
+  const AddEditEmployeeDeleteEvent(this.id);
+}
+
+class AddEditEmployeeUndoEvent extends AddEditEmployeeEvent {
+  const AddEditEmployeeUndoEvent();
+}

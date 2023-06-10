@@ -15,12 +15,11 @@ class AppButtonSmall extends StatelessWidget {
   }) {
     this.buttonColor = buttonColor ?? AppColors.colors.buttonPrimary;
     this.buttonTextStyle = buttonTextStyle ??
-        AppFonts().getTextStyle(TStyle.b1)?.copyWith(
-              color: AppColors.colors.buttonTextPrimary,
-              fontWeight: FontWeight.w500,
-              height: 1,
-            ) ??
-        const TextStyle();
+        AppFonts.fonts.b1.copyWith(
+          color: AppColors.colors.buttonTextPrimary,
+          fontWeight: FontWeight.w500,
+          height: 1,
+        );
   }
   AppButtonSmall.secondary({
     super.key,
@@ -31,12 +30,11 @@ class AppButtonSmall extends StatelessWidget {
   }) {
     this.buttonColor = buttonColor ?? AppColors.colors.buttonSecondary;
     this.buttonTextStyle = buttonTextStyle ??
-        AppFonts().getTextStyle(TStyle.b1)?.copyWith(
-              color: AppColors.colors.buttonTextSecondary,
-              fontWeight: FontWeight.w500,
-              height: 1,
-            ) ??
-        const TextStyle();
+        AppFonts.fonts.b1.copyWith(
+          color: AppColors.colors.buttonTextSecondary,
+          fontWeight: FontWeight.w500,
+          height: 1,
+        );
   }
 
   @override

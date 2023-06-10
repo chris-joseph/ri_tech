@@ -10,7 +10,7 @@ const Color blueDark = Color(0xFF0E8AD7);
 const Color black = Color(0xFF323238);
 const Color white = Color(0xFFFFFFFF);
 const Color red = Color(0xFFF34642);
-const Color textGrey = Color(0xFF323238);
+const Color textGrey = Color(0xFF949C9E);
 
 enum AppBrightness { light, dark }
 

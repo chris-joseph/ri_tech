@@ -47,6 +47,9 @@ class _DatePickerState extends State<DatePicker> {
   @override
   void initState() {
     super.initState();
+    if (widget.selectedDate != null) {
+      selectedDate = Jiffy.parseFromDateTime(widget.selectedDate!);
+    }
   }
 
   Widget buildQuickOptions() {

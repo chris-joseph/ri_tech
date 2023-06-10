@@ -29,3 +29,11 @@ class AddEditEmployeeDataState extends AddEditEmployeeState {
         DateTime.now().toIso8601String()
       ];
 }
+
+class AddEditEmployeeActionState extends AddEditEmployeeState {
+  final AddEditEmployeeListAction action;
+  final String? data;
+  const AddEditEmployeeActionState(this.action, this.data);
+  @override
+  List<Object> get props => [DateTime.now().toIso8601String()];
+}

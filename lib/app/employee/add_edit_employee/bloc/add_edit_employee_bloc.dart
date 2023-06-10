@@ -6,6 +6,8 @@ import 'package:ri_tech/data/repository/employee/employee_repository.dart';
 part 'add_edit_employee_event.dart';
 part 'add_edit_employee_state.dart';
 
+enum AddEditEmployeeListAction { validation, pop, showDeleteSnackBar }
+
 class AddEditEmployeeBloc
     extends Bloc<AddEditEmployeeEvent, AddEditEmployeeState> {
   final EmployeeRepo _employeeRepo;
@@ -26,6 +28,8 @@ class AddEditEmployeeBloc
     on<AddEditEmployeeStartDateChangeEvent>(_startDateChange);
     on<AddEditEmployeeEndDateChangeEvent>(_endDateChange);
     on<AddEditEmployeeSaveEvent>(_save);
+    on<AddEditEmployeeDeleteEvent>(_deleteEmployee);
+    on<AddEditEmployeeUndoEvent>(_undoDeleteEmployee);
   }
 
   AddEditEmployeeDataState get dataState => AddEditEmployeeDataState(
@@ -85,6 +89,18 @@ class AddEditEmployeeBloc
     return (true, "Valid");
   }
 
+  Future<void> _deleteEmployee(AddEditEmployeeDeleteEvent event, emit) async {
+    final res = await _employeeRepo.deleteEmployee(event.id);
+    if (res) {
+      emit(const AddEditEmployeeActionState(
+          AddEditEmployeeListAction.showDeleteSnackBar, ""));
+    }
+  }
+
+  Future<void> _undoDeleteEmployee(AddEditEmployeeUndoEvent event, emit) async {
+    await _employeeRepo.undoDeleteEmployee();
+  }
+
   Future<void> _save(AddEditEmployeeSaveEvent event, emit) async {
     //name len>=3
     //role !=null
@@ -101,8 +117,14 @@ class AddEditEmployeeBloc
           startDate: _startDate,
         ),
       );
+      emit(
+        AddEditEmployeeActionState(AddEditEmployeeListAction.pop, valid.$2),
+      );
     } else {
-      //TODO show error toasts
+      emit(
+        AddEditEmployeeActionState(
+            AddEditEmployeeListAction.validation, valid.$2),
+      );
     }
   }
 }
