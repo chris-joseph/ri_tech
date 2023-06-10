@@ -6,12 +6,16 @@ import 'package:ri_tech/design/design.dart';
 class AddEditEmployeeDateSectionWidget extends StatelessWidget {
   final List<DatePickerQuickSelectOptions> quickSelectOptions;
   final DateTime? selectedDate;
+  final DateTime? firstDate;
+  final DateTime? lastDate;
   final Function(DateTime?) onChange;
   const AddEditEmployeeDateSectionWidget({
     super.key,
     required this.quickSelectOptions,
     this.selectedDate,
     required this.onChange,
+    this.firstDate,
+    this.lastDate,
   });
 
   @override
@@ -32,6 +36,8 @@ class AddEditEmployeeDateSectionWidget extends StatelessWidget {
                   decoration: BoxDecoration(
                       color: white, borderRadius: BorderRadius.circular(16)),
                   child: DatePicker(
+                    firstDate: firstDate,
+                    lastDate: lastDate,
                     selectedDate: selectedDate,
                     quickSelectOptions: quickSelectOptions,
                     onChange: onChange,
@@ -55,12 +61,12 @@ class AddEditEmployeeDateSectionWidget extends StatelessWidget {
                 ),
                 child: SvgPicture.asset(Assets.calendar),
               ),
-              const SizedBox(
-                width: 8,
-              ),
               Text(
                 getDateString(selectedDate),
-                style: AppFonts.fonts.h1,
+                style: AppFonts.fonts.b1.copyWith(
+                    color: selectedDate == null
+                        ? AppColors.colors.textSecondary
+                        : AppColors.colors.textPrimary),
               )
             ],
           ),

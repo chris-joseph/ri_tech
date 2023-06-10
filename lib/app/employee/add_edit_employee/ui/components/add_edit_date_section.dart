@@ -46,6 +46,8 @@ class AddEditEmployeeDateSection extends StatelessWidget {
           ),
           AddEditEmployeeDateSectionWidget(
             selectedDate: endDate,
+            firstDate: DateTime.now(),
+            //lastDate: DateTime.now().add(Duration(days: 5)),
             onChange: (dateTime) {
               onEndDateChange(dateTime);
             },

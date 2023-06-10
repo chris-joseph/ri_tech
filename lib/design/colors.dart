@@ -15,61 +15,47 @@ const Color textGrey = Color(0xFF949C9E);
 enum AppBrightness { light, dark }
 
 class AppColors {
-  final Color primary;
-  final Color secondary;
-  final Color tertiary;
-  final Color scaffoldBackgroundPrimary;
-  final Color scaffoldBackgroundSecondary;
-  final Color textPrimary;
-  final Color textSecondary;
-  final Color buttonPrimary;
-  final Color buttonTextPrimary;
-  final Color buttonSecondary;
-  final Color buttonTextSecondary;
-  final Color iconPrimary;
-  final Color iconSecondary;
-  final Color appBarBackground;
+  late final Color primary;
+  late final Color secondary;
+  late final Color tertiary;
+  late final Color scaffoldBackgroundPrimary;
+  late final Color scaffoldBackgroundSecondary;
+  late final Color textPrimary;
+  late final Color textSecondary;
+  late final Color buttonPrimary;
+  late final Color buttonTextPrimary;
+  late final Color buttonSecondary;
+  late final Color buttonTextSecondary;
+  late final Color iconPrimary;
+  late final Color iconSecondary;
+  late final Color appBarBackground;
 
-  AppColors._light({
-    this.primary = blueLight,
-    this.secondary = white,
-    this.tertiary = red,
-    this.scaffoldBackgroundPrimary = backgroundGrey,
-    this.scaffoldBackgroundSecondary = white,
-    this.textPrimary = black,
-    this.textSecondary = textGrey,
-    this.buttonPrimary = blueLight,
-    this.buttonTextPrimary = white,
-    this.buttonSecondary = blueLightest,
-    this.buttonTextSecondary = blueLight,
-    this.iconPrimary = blueLight,
-    this.iconSecondary = white,
-    this.appBarBackground = blueLight,
-  });
-  AppColors._dark({
-    this.primary = blueLight,
-    this.secondary = white,
-    this.tertiary = red,
-    this.scaffoldBackgroundPrimary = backgroundGrey,
-    this.scaffoldBackgroundSecondary = white,
-    this.textPrimary = black,
-    this.textSecondary = textGrey,
-    this.buttonPrimary = blueLight,
-    this.buttonTextPrimary = white,
-    this.buttonSecondary = blueLightest,
-    this.buttonTextSecondary = blueLight,
-    this.iconPrimary = blueLight,
-    this.iconSecondary = white,
-    this.appBarBackground = blueLight,
-  });
+  AppColors._light({AppBrightness deviceBrightness = AppBrightness.light}) {
+    switch (deviceBrightness) {
+      case AppBrightness.light:
+      case AppBrightness.dark:
+        primary = blueLight;
+        secondary = white;
+        tertiary = red;
+        scaffoldBackgroundPrimary = backgroundGrey;
+        scaffoldBackgroundSecondary = white;
+        textPrimary = black;
+        textSecondary = textGrey;
+        buttonPrimary = blueLight;
+        buttonTextPrimary = white;
+        buttonSecondary = blueLightest;
+        buttonTextSecondary = blueLight;
+        iconPrimary = blueLight;
+        iconSecondary = white;
+        appBarBackground = blueLight;
+    }
+  }
 
   static AppColors? _instance;
 
   factory AppColors.createInstance(
       {AppBrightness deviceBrightness = AppBrightness.light}) {
-    return _instance ??= deviceBrightness == AppBrightness.light
-        ? AppColors._light()
-        : AppColors._dark();
+    return _instance ??= AppColors._light();
   }
   static AppColors get colors {
     if (_instance == null) {

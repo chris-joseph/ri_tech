@@ -28,7 +28,7 @@ class _EmployeeListScreenState extends State<EmployeeListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: getEmployeeAppBar("Employee List", []),
-      backgroundColor: backgroundGrey,
+      backgroundColor: white,
       floatingActionButton: SizedBox(
         width: 50,
         height: 50,
@@ -75,25 +75,28 @@ class _EmployeeListScreenState extends State<EmployeeListScreen> {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (state.currentEmployees.isNotEmpty)
-                  Expanded(
-                    child: EmployeeListSection(
-                        isPast: false,
-                        employeeListBloc: _employeeListBloc,
-                        list: state.currentEmployees),
+                Expanded(
+                  child: ListView(
+                    children: [
+                      if (state.currentEmployees.isNotEmpty)
+                        EmployeeListSection(
+                            isPast: false,
+                            employeeListBloc: _employeeListBloc,
+                            list: state.currentEmployees),
+                      if (state.pastEmployees.isNotEmpty)
+                        EmployeeListSection(
+                            isPast: true,
+                            employeeListBloc: _employeeListBloc,
+                            list: state.pastEmployees),
+                    ],
                   ),
-                if (state.pastEmployees.isNotEmpty)
-                  Expanded(
-                    child: EmployeeListSection(
-                        isPast: true,
-                        employeeListBloc: _employeeListBloc,
-                        list: state.pastEmployees),
-                  ),
+                ),
                 Container(
                   padding: EdgeInsets.symmetric(
                       horizontal: AppPadding.padding.m,
                       vertical: AppPadding.padding.s),
                   height: 76,
+                  width: double.infinity,
                   color: backgroundGrey,
                   child: Text(
                     "Swipe left to delete",

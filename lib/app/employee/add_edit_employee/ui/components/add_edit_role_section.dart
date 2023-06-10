@@ -25,10 +25,10 @@ class AddEditEmployeeRoleField extends StatelessWidget {
             topLeft: Radius.circular(16),
           ),
         ),
-        constraints: const BoxConstraints(maxHeight: 212),
         barrierColor: barrierGrey,
         builder: (BuildContext context) {
           return Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               ...List.generate(
                 EmployeeRole.values.length,

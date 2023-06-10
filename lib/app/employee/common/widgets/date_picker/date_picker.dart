@@ -33,13 +33,18 @@ enum DatePickerQuickSelectOptions {
 class DatePicker extends StatefulWidget {
   final List<DatePickerQuickSelectOptions> quickSelectOptions;
   final DateTime? selectedDate;
+  final DateTime? firstDate;
+  final DateTime? lastDate;
+
   final Function(DateTime?) onChange;
-  const DatePicker(
-      {Key? key,
-      required this.quickSelectOptions,
-      this.selectedDate,
-      required this.onChange})
-      : super(key: key);
+  const DatePicker({
+    Key? key,
+    required this.quickSelectOptions,
+    this.selectedDate,
+    required this.onChange,
+    this.firstDate,
+    this.lastDate,
+  }) : super(key: key);
 
   @override
   State<DatePicker> createState() => _DatePickerState();
@@ -154,13 +159,25 @@ class _DatePickerState extends State<DatePicker> {
   List<Widget> getDaysView() {
     final daysIn = currentDate.daysInMonth;
     final firstDay = Jiffy.parse("${currentDate.year}-${currentDate.month}-01");
+    bool isDisabled(int day) {
+      bool c1 = false;
+      bool c2 = false;
+      final date = Jiffy.parse("${currentDate.year}-${currentDate.month}-$day");
+      if (widget.firstDate != null) {
+        c1 = Jiffy.parseFromDateTime(widget.firstDate!)
+            .isAfter(date, unit: Unit.day);
+      }
+      if (widget.lastDate != null) {
+        c2 = Jiffy.parseFromDateTime(widget.lastDate!)
+            .isBefore(date, unit: Unit.day);
+      }
+      return c1 || c2;
+    }
+
     final list = List.generate(
       daysIn,
       (index) => DatePickerDayWidget(
-        isDisabled: Jiffy.now().isAfter(
-            Jiffy.parse(
-                "${currentDate.year}-${currentDate.month}-${(index + 1)}"),
-            unit: Unit.day),
+        isDisabled: isDisabled(index + 1),
         onTap: setSelectedDate,
         date: Jiffy.parse(
             "${currentDate.year}-${currentDate.month}-${(index + 1)}"),
@@ -178,7 +195,7 @@ class _DatePickerState extends State<DatePicker> {
       ),
       ...List.filled(firstDay.dayOfWeek - 1, const SizedBox()),
       ...list,
-      ...List.filled(7 - (firstDay.dayOfWeek - 1), const SizedBox()),
+      ...List.filled(8 - (firstDay.dayOfWeek - 1), const SizedBox()),
     ];
     return newList;
   }
@@ -212,9 +229,10 @@ class _DatePickerState extends State<DatePicker> {
           children: [
             InkWell(
               onTap: () {
-                if (currentDate
-                    .subtract(months: 1)
-                    .isBefore(today, unit: Unit.month)) {
+                if (widget.firstDate != null &&
+                    currentDate.subtract(months: 1).isBefore(
+                        Jiffy.parseFromDateTime(widget.firstDate!),
+                        unit: Unit.month)) {
                   return;
                 }
                 prevMonth();
@@ -223,9 +241,10 @@ class _DatePickerState extends State<DatePicker> {
                 quarterTurns: 2,
                 child: SvgPicture.asset(
                   Assets.arrow,
-                  color: currentDate
-                          .subtract(months: 1)
-                          .isBefore(today, unit: Unit.month)
+                  color: widget.firstDate != null &&
+                          currentDate.subtract(months: 1).isBefore(
+                              Jiffy.parseFromDateTime(widget.firstDate!),
+                              unit: Unit.month)
                       ? outlineGrey
                       : disabledGrey,
                 ),
@@ -247,11 +266,22 @@ class _DatePickerState extends State<DatePicker> {
             ),
             InkWell(
               onTap: () {
+                if (widget.lastDate != null &&
+                    currentDate.add(months: 1).isAfter(
+                        Jiffy.parseFromDateTime(widget.lastDate!),
+                        unit: Unit.month)) {
+                  return;
+                }
                 nextMonth();
               },
               child: SvgPicture.asset(
                 Assets.arrow,
-                color: disabledGrey,
+                color: widget.lastDate != null &&
+                        currentDate.add(months: 1).isAfter(
+                            Jiffy.parseFromDateTime(widget.lastDate!),
+                            unit: Unit.month)
+                    ? outlineGrey
+                    : disabledGrey,
               ),
             )
           ],

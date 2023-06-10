@@ -31,7 +31,8 @@ class AddEditEmployeeTextField extends StatelessWidget {
           constraints: const BoxConstraints.tightFor(height: 40),
           contentPadding: EdgeInsets.all(AppPadding.padding.xs),
           hintText: "Employee Name",
-          hintStyle: AppFonts.fonts.b1.copyWith(color: disabledGrey),
+          hintStyle: AppFonts.fonts.h2
+              .copyWith(color: disabledGrey, fontWeight: FontWeight.w400),
           prefixIcon: Container(
             width: 44,
             alignment: Alignment.centerLeft,
