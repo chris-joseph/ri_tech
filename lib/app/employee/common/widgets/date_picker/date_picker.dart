@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:jiffy/jiffy.dart';
-import 'package:ri_tech/app/employee/add_edit_employee/ui/widgets/add_edit_employee_action_button.dart';
+import 'package:ri_tech/app/employee/common/widgets/date_picker/components/action_bar.dart';
+import 'package:ri_tech/app/employee/common/widgets/date_picker/components/day_widget.dart';
+import 'package:ri_tech/app/employee/common/widgets/date_picker/components/quick_options.dart';
 import 'package:ri_tech/design/design.dart';
 
 enum DaysOfWeek {
@@ -274,158 +276,6 @@ class _DatePickerState extends State<DatePicker> {
           selectedDate: selectedDate,
         ),
       ],
-    );
-  }
-}
-
-class DatePickerBottomBar extends StatelessWidget {
-  final Jiffy? selectedDate;
-  final Function(DateTime?) onTap;
-  const DatePickerBottomBar({Key? key, this.selectedDate, required this.onTap})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 64,
-      decoration: const BoxDecoration(
-        border: Border(
-          top: BorderSide(color: backgroundGrey, width: 1),
-        ),
-      ),
-      padding: EdgeInsets.symmetric(
-        horizontal: AppPadding.padding.m,
-        vertical: AppPadding.padding.s,
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          SvgPicture.asset(Assets.calendar),
-          const SizedBox(
-            width: 4,
-          ),
-          Text(
-            getDateString(selectedDate?.dateTime),
-            style: const TextStyle(fontFamily: fontFamily, fontSize: 16),
-          ),
-          const Spacer(),
-          AppButtonSmall.secondary(
-            buttonText: "Cancel",
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          SizedBox(
-            width: AppPadding.padding.m,
-          ),
-          AppButtonSmall.primary(
-            buttonText: "Save",
-            onPressed: () {
-              onTap(selectedDate?.dateTime);
-              Navigator.pop(context);
-            },
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class DatePickerQuickOptionsWidget extends StatelessWidget {
-  final String title;
-
-  final bool isSelected;
-  final Function onTap;
-  const DatePickerQuickOptionsWidget({
-    super.key,
-    required this.title,
-    required this.onTap,
-    required this.isSelected,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => onTap(),
-      child: Container(
-        height: 36,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: isSelected
-              ? AppColors.colors.buttonPrimary
-              : AppColors.colors.buttonSecondary,
-          borderRadius: BorderRadius.circular(4),
-        ),
-        child: Text(
-          title,
-          style: TextStyle(
-            fontFamily: fontFamily,
-            fontSize: 14,
-            color: isSelected
-                ? AppColors.colors.buttonTextPrimary
-                : AppColors.colors.buttonTextSecondary,
-            fontWeight: FontWeight.w400,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class DatePickerDayWidget extends StatelessWidget {
-  final Jiffy date;
-  final Jiffy? selectedDate;
-  final Jiffy currentDate;
-  final bool isDisabled;
-  final Function(Jiffy) onTap;
-  const DatePickerDayWidget({
-    super.key,
-    required this.date,
-    this.selectedDate,
-    required this.currentDate,
-    required this.onTap,
-    required this.isDisabled,
-  });
-  Color _getFontColor() {
-    if (isDisabled) {
-      return outlineGrey;
-    }
-    if (selectedDate != null && date.isSame(selectedDate!, unit: Unit.day)) {
-      return white;
-    }
-    if (date.isSame(Jiffy.now(), unit: Unit.day)) {
-      return AppColors.colors.primary;
-    }
-    return AppColors.colors.textPrimary;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: isDisabled ? null : () => onTap(date),
-      child: Container(
-        margin: const EdgeInsets.all(3),
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: selectedDate != null
-                ? date.isSame(selectedDate!, unit: Unit.day)
-                    ? AppColors.colors.primary
-                    : white
-                : white,
-            border: date.isSame(Jiffy.now(), unit: Unit.day)
-                ? Border.all(color: AppColors.colors.primary)
-                : null),
-        child: Text(
-          date.dateTime.day.toString(),
-          style: TextStyle(
-              fontFamily: fontFamily,
-              fontSize: 15,
-              color: _getFontColor(),
-              fontWeight: FontWeight.w400),
-        ),
-      ),
     );
   }
 }
